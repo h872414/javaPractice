@@ -22,12 +22,25 @@ public class DivideAndConquer {
         }
     }
 
-    private void checkIsPeakAvailable(int[] inputArray){
-        if(inputArray.length < 3 ){
+    private void checkIsPeakAvailable(int[] inputArray) {
+        if (inputArray.length < 3) {
             throw new IllegalArgumentException("Can not find peak in array, which is smaller than 3");
         }
     }
 
+    /**
+     * Look for a "peak" in an array, where a given indexed element is greater than its neighbours
+     * <p>Algorithm:</p>
+     * <ul>
+     *     <li>If {@code middle> is greater than its neighbours return middle</li>
+     *     <li>If {code middle-1} is greater than {@code middle} update the {@code higherIndex}</li>
+     *     <li>Else update {@code lowerIndex}</li>
+     * </ul>
+     *
+     * @param inputArray look for peak in this array
+     *
+     * @return return the index of the peak, or return -1 if no peak exists
+     */
     private int lookForPeak(int[] inputArray) {
         int lowerIndex = 1;
         int higherIndex = inputArray.length - 2;
@@ -49,7 +62,7 @@ public class DivideAndConquer {
      *
      * @param inputArray  need to find a peak in this array
      * @param lowerIndex  left bound to the search interval
-     * @param higherIndex right bound to the search interval
+     * @param higherIndex right bo1und to the search interval
      *
      * @return index of a local peak
      */
