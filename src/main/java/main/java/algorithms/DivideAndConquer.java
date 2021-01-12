@@ -66,43 +66,83 @@ public class DivideAndConquer {
      *
      * @return index of a local peak
      */
-    public static Integer findAPeakRecursive(int[] inputArray, int lowerIndex, int higherIndex)
-        throws NullPointerException, IllegalArgumentException {
-        if (inputArray == null) {
-            throw new NullPointerException();
-        }
-        if (inputArray.length == 0 || (lowerIndex < 0 || lowerIndex > higherIndex) || (higherIndex < lowerIndex || higherIndex > inputArray.length - 1)) {
-            throw new IllegalArgumentException();
-        }
+    public Integer findAPeakRecursive(final @NonNull int[] inputArray, final int lowerIndex, final int higherIndex) {
+        checkIsInputValid(inputArray, lowerIndex, higherIndex);
+        checkIsPeakAvailable(inputArray);
+        final int peak = checkIsEndState(inputArray, lowerIndex, higherIndex);
 
+        if (peak != -1) {
+            return peak;
+        }
+        return lookForPeakRecursive(inputArray, lowerIndex, higherIndex);
+    }
+
+    private void checkIsInputValid(final int[] inputArray, final int lowerIndex, final int higherIndex) {
+        checkIsArrayEmpty(inputArray);
+        checkIsInputBoundaryValid(inputArray, lowerIndex, higherIndex);
+    }
+
+    private void checkIsInputBoundaryValid(int[] inputArray, int lowerIndex, int higherIndex) {
+        if (lowerIndex < 0 || lowerIndex > higherIndex || higherIndex > inputArray.length - 1) {
+            throw new IllegalArgumentException("The indexes has to be valid");
+        }
+    }
+
+    /**
+     * Check if end of the recursion
+     *
+     * @param inputArray  need to find a peak in this array
+     * @param lowerIndex  left bound to the search interval
+     * @param higherIndex right bo1und to the search interval
+     *
+     * @return index of a local peak, or -1 if no peak found
+     */
+    private int checkIsEndState(int[] inputArray, int lowerIndex, int higherIndex) {
         if (higherIndex - lowerIndex <= 1) {
-            if (inputArray[lowerIndex] >= inputArray[lowerIndex + 1]) {
+            if (checkIsLeftBound(inputArray, lowerIndex)) {
                 return lowerIndex;
-            } else if (inputArray[higherIndex] >= inputArray[higherIndex - 1]) {
+            } else if (checkIsRightBound(inputArray, higherIndex)) {
                 return higherIndex;
             }
         }
+        return -1;
+    }
 
-        int middle = lowerIndex + (higherIndex - lowerIndex) / 2;
+    private boolean checkIsRightBound(int[] inputArray, int higherIndex) {
+        return inputArray[higherIndex] >= inputArray[higherIndex - 1] && higherIndex + 1 < inputArray.length - 1;
+    }
+
+    private boolean checkIsLeftBound(int[] inputArray, int lowerIndex) {
+        return inputArray[lowerIndex] >= inputArray[lowerIndex + 1] && lowerIndex > 1;
+    }
+
+    /**
+     * * Look for a "peak" in an array, where a given indexed element is greater than its neighbours using recursion
+     * * <p>Algorithm:</p>
+     * * <ul>
+     * *     <li>If {@code inputArray[middle]> is less than {@code inputArray[middle - 1]} call recursion
+     * with updated indexes => {@code middle - 1}</li>
+     * *     <li>If {@code inputArray[middle]> is less than {@code inputArray[middle + 1]} call recursion
+     * with updated indexes => {@code middle + 1}</li>
+     * *     <li>Else return {@code middle}</li>
+     * * </ul>
+     *
+     * @param inputArray  need to find a peak in this array
+     * @param lowerIndex  left bound to the search interval
+     * @param higherIndex right bo1und to the search interval
+     *
+     * @return return middle if it find a peak, else call recursion
+     */
+    private int lookForPeakRecursive(int[] inputArray, int lowerIndex, int higherIndex) {
+        final int middle = lowerIndex + (higherIndex - lowerIndex) / 2;
         if (inputArray[middle] < inputArray[middle - 1]) {
-            return findAPeakRecursive(inputArray, lowerIndex, middle - 1);
+            return middle - 1 > 0 ? findAPeakRecursive(inputArray, lowerIndex, middle - 1) : -1;
         } else if (inputArray[middle] < inputArray[middle + 1]) {
-            return findAPeakRecursive(inputArray, middle + 1, higherIndex);
+            return middle + 1 < inputArray.length - 1 ? findAPeakRecursive(inputArray, middle + 1, higherIndex) : -1;
         }
         return middle;
     }
 
-    /**
-     * Search in an ordered input for specified key
-     *
-     * @param inputArray
-     * @param leftBound
-     * @param rightBound
-     * @param key
-     *
-     * @return - the index if the key,
-     * - -1 the array does not contains the key
-     */
     public static int binarySearch(int[] inputArray, int leftBound, int rightBound, int key) {
 
         if (leftBound < rightBound) {
