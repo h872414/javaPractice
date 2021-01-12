@@ -2,6 +2,7 @@ package main.java.algorithms;
 
 import lombok.Value;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -23,6 +24,13 @@ class DivideAndConquerTest {
         int expectedIndex;
     }
 
+    @Value
+    private static class SimpleTestCaseForBinarySearch {
+        int[] inputArray;
+        int valueLookingFor;
+        int index;
+    }
+
     private static Collection<SimpleTestCaseForPeakSearch> dataForSimplePeakSearch() {
         return Arrays.asList(
             new SimpleTestCaseForPeakSearch(new int[]{1, 3, 4, 3, 5, 1, 3}, 2),
@@ -35,6 +43,16 @@ class DivideAndConquerTest {
             new SimpleTestCaseForPeakSearch(new int[]{14, 13, 12}, -1),
             new SimpleTestCaseForPeakSearch(new int[]{12, 13, 14}, -1),
             new SimpleTestCaseForPeakSearch(new int[]{12, 14, 12}, 1)
+        );
+    }
+
+    private static Collection<SimpleTestCaseForBinarySearch> dataForSimpleBinarySearch() {
+        return Arrays.asList(
+            new SimpleTestCaseForBinarySearch(new int[]{5, 6, 20, 30, 30, 66, 69}, 6,1),
+            new SimpleTestCaseForBinarySearch(new int[]{5, 6, 20, 30, 30, 66, 69}, 10, -1),
+            new SimpleTestCaseForBinarySearch(new int[]{5, 6, 20, 30, 30, 66, 69}, 30, 3),
+            new SimpleTestCaseForBinarySearch(new int[]{5, 6, 20, 30, 30, 66, 69}, 4, -1),
+            new SimpleTestCaseForBinarySearch(new int[]{5, 6, 20, 30, 30, 66, 69}, 66, 5)
         );
     }
 
@@ -73,15 +91,41 @@ class DivideAndConquerTest {
     @ParameterizedTest(name = "{index} test case")
     @NullSource
     void peakSearchRecursiveNullTest(int[] inputArray) {
-        assertThrows(NullPointerException.class,
-            () -> divideAndConquer.findAPeakRecursive(inputArray, 1, inputArray.length - 1));
+        assertThrows(
+            NullPointerException.class,
+            () -> divideAndConquer.findAPeakRecursive(inputArray, 1, inputArray.length - 1)
+        );
     }
 
     @DisplayName("PeakSearchRecursive null test")
     @ParameterizedTest(name = "{index} test case")
     @EmptySource
     void peakSearchRecursiveEmptyTest(int[] inputArray) {
-        assertThrows(IllegalArgumentException.class,
-            () -> divideAndConquer.findAPeakRecursive(inputArray, 1, inputArray.length - 1));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> divideAndConquer.findAPeakRecursive(inputArray, 1, inputArray.length - 1)
+        );
+    }
+
+    @DisplayName("BinarySearch simple test")
+    @ParameterizedTest(name = "{index}")
+    @MethodSource("dataForSimpleBinarySearch")
+    void binarySearchSimpleTest(SimpleTestCaseForBinarySearch testCase){
+        final int index = divideAndConquer.binarySearch(testCase.inputArray, 0, testCase.inputArray.length-1, testCase.valueLookingFor);
+        assertThat(testCase.index, is(index));
+    }
+
+    @DisplayName("BinarySearch null test")
+    @ParameterizedTest(name = "{index} test case")
+    @NullSource
+    void binarySearchNullTest(int[] inputArray){
+        assertThrows(NullPointerException.class, ()->divideAndConquer.binarySearch(inputArray, 0, inputArray.length-1, 0));
+    }
+
+    @DisplayName("BinarySearch empty test")
+    @ParameterizedTest(name = "{index} test case")
+    @EmptySource
+    void binarySearchEmptyTest(int[] inputArray){
+        assertThrows(IllegalArgumentException.class, ()->divideAndConquer.binarySearch(inputArray, 0, inputArray.length-1, 0));
     }
 }
