@@ -108,12 +108,13 @@ public class DivideAndConquer {
         return middle;
     }
 
-    public static int binarySearch(int[] inputArray, int leftBound, int rightBound, int key) {
-
-        if (leftBound < rightBound) {
+    public int binarySearch(final @NonNull int[] inputArray, int leftBound, int rightBound, int key) {
+        checkIsArrayEmpty(inputArray);
+        if (leftBound > rightBound) {
             return -1;
         }
         int middle = leftBound + (rightBound - leftBound) / 2;
+
         if (key == inputArray[middle]) {
             return middle;
         }
@@ -123,4 +124,5 @@ public class DivideAndConquer {
             return binarySearch(inputArray, middle + 1, rightBound, key);
         }
     }
+
 }
