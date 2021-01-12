@@ -1,6 +1,7 @@
 package main.java.algorithms;
 
 import lombok.NonNull;
+import main.java.algorithms.utils.RecursiveInput;
 
 public class DivideAndConquer {
     /**
@@ -67,53 +68,12 @@ public class DivideAndConquer {
      * @return index of a local peak
      */
     public Integer findAPeakRecursive(final @NonNull int[] inputArray, final int lowerIndex, final int higherIndex) {
-        checkIsInputValid(inputArray, lowerIndex, higherIndex);
-        checkIsPeakAvailable(inputArray);
-        final int peak = checkIsEndState(inputArray, lowerIndex, higherIndex);
-
+        RecursiveInput recursiveInput = new RecursiveInput(inputArray, lowerIndex, higherIndex);
+        final int peak = recursiveInput.checkIsEndState();
         if (peak != -1) {
             return peak;
         }
-        return lookForPeakRecursive(inputArray, lowerIndex, higherIndex);
-    }
-
-    private void checkIsInputValid(final int[] inputArray, final int lowerIndex, final int higherIndex) {
-        checkIsArrayEmpty(inputArray);
-        checkIsInputBoundaryValid(inputArray, lowerIndex, higherIndex);
-    }
-
-    private void checkIsInputBoundaryValid(int[] inputArray, int lowerIndex, int higherIndex) {
-        if (lowerIndex < 0 || lowerIndex > higherIndex || higherIndex > inputArray.length - 1) {
-            throw new IllegalArgumentException("The indexes has to be valid");
-        }
-    }
-
-    /**
-     * Check if end of the recursion
-     *
-     * @param inputArray  need to find a peak in this array
-     * @param lowerIndex  left bound to the search interval
-     * @param higherIndex right bo1und to the search interval
-     *
-     * @return index of a local peak, or -1 if no peak found
-     */
-    private int checkIsEndState(int[] inputArray, int lowerIndex, int higherIndex) {
-        if (higherIndex - lowerIndex <= 1) {
-            if (checkIsLeftBound(inputArray, lowerIndex)) {
-                return lowerIndex;
-            } else if (checkIsRightBound(inputArray, higherIndex)) {
-                return higherIndex;
-            }
-        }
-        return -1;
-    }
-
-    private boolean checkIsRightBound(int[] inputArray, int higherIndex) {
-        return inputArray[higherIndex] >= inputArray[higherIndex - 1] && higherIndex + 1 < inputArray.length - 1;
-    }
-
-    private boolean checkIsLeftBound(int[] inputArray, int lowerIndex) {
-        return inputArray[lowerIndex] >= inputArray[lowerIndex + 1] && lowerIndex > 1;
+        return lookForPeakRecursive(recursiveInput);
     }
 
     /**
@@ -133,12 +93,17 @@ public class DivideAndConquer {
      *
      * @return return middle if it find a peak, else call recursion
      */
-    private int lookForPeakRecursive(int[] inputArray, int lowerIndex, int higherIndex) {
-        final int middle = lowerIndex + (higherIndex - lowerIndex) / 2;
+    private int lookForPeakRecursive(RecursiveInput recursiveInput) {
+        final int middle = recursiveInput.getMiddle();
+        final int[] inputArray = recursiveInput.getInputArray();
         if (inputArray[middle] < inputArray[middle - 1]) {
-            return middle - 1 > 0 ? findAPeakRecursive(inputArray, lowerIndex, middle - 1) : -1;
+            return middle - 1 > 0 ? findAPeakRecursive(inputArray, recursiveInput.getLowerIndex(), middle - 1) : -1;
         } else if (inputArray[middle] < inputArray[middle + 1]) {
-            return middle + 1 < inputArray.length - 1 ? findAPeakRecursive(inputArray, middle + 1, higherIndex) : -1;
+            return middle + 1 < inputArray.length - 1 ? findAPeakRecursive(
+                inputArray,
+                middle + 1,
+                recursiveInput.getHigherIndex()
+            ) : -1;
         }
         return middle;
     }
