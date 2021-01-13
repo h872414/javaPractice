@@ -45,6 +45,10 @@ public class Node {
         return parent;
     }
 
+    public int getKey() {
+        return key;
+    }
+
     public void setLeftChild(final Node left) {
         this.left = left;
     }
@@ -53,10 +57,25 @@ public class Node {
         this.right = right;
     }
 
+    public void setParent(final Node parent) {
+        this.parent = parent;
+    }
+
+    public void clearLeft() {
+        this.left = null;
+    }
+
     @Override
     public String toString() {
+        String leftStr = this.getLeft() == null ? "null" : String.valueOf(this.getLeft().getKey());
+        String rightStr = this.getRight() == null ? "null" : String.valueOf(this.getRight().getKey());
+
         return "Node{" +
-            "key=" + key + "}";
+            "key=" + key +
+            ", parent=" + parent.getKey() +
+            ", left=" + leftStr +
+            ", right=" + rightStr +
+            '}';
     }
 
     @Override

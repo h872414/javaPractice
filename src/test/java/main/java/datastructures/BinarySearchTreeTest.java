@@ -51,7 +51,8 @@ class BinarySearchTreeTest {
         return Arrays.asList(
             new TestCaseForNexAndPrevioustBST(2, 3),
             new TestCaseForNexAndPrevioustBST(3, 4),
-            new TestCaseForNexAndPrevioustBST(4, 6),
+            new TestCaseForNexAndPrevioustBST(4, 5),
+            new TestCaseForNexAndPrevioustBST(5, 6),
             new TestCaseForNexAndPrevioustBST(6, 7),
             new TestCaseForNexAndPrevioustBST(7, 9),
             new TestCaseForNexAndPrevioustBST(9, 13),
@@ -66,7 +67,8 @@ class BinarySearchTreeTest {
         return Arrays.asList(
             new TestCaseForNexAndPrevioustBST(3, 2),
             new TestCaseForNexAndPrevioustBST(4, 3),
-            new TestCaseForNexAndPrevioustBST(6, 4),
+            new TestCaseForNexAndPrevioustBST(5, 4),
+            new TestCaseForNexAndPrevioustBST(6, 5),
             new TestCaseForNexAndPrevioustBST(7, 6),
             new TestCaseForNexAndPrevioustBST(9, 7),
             new TestCaseForNexAndPrevioustBST(13, 9),
@@ -91,6 +93,30 @@ class BinarySearchTreeTest {
         fillUpTree(testCase.nodeValues, binarySearchTree);
         final ArrayList<Node> expectedNodes = convertIntArrayToArrayList(testCase.nodeInOrder);
         assertThat(expectedNodes, is(binarySearchTree.inOrder()));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2, 7, 3, 18})
+    void deleteTest(int value) {
+        BinarySearchTree binarySearchTree = buildTree();
+        int[] nodeValuesInOrder = new int[]{2, 3, 4, 5, 6, 7, 9, 13, 14, 15, 17, 18, 20};
+        final ArrayList<Node> expectedNodes = convertIntArrayToArrayList(nodeValuesInOrder);
+        expectedNodes.remove(new Node(value));
+        binarySearchTree.delete(value);
+        assertThat(expectedNodes, is(binarySearchTree.inOrder()));
+    }
+
+    @Test
+    void deleteWithValueNotStoredInTreeTest() {
+        BinarySearchTree binarySearchTree = buildTree();
+        assertThrows(IllegalArgumentException.class, () -> binarySearchTree.delete(1));
+    }
+
+    @ParameterizedTest
+    @NullSource
+    void deleteNullTest(Integer value) {
+        BinarySearchTree binarySearchTree = buildTree();
+        assertThrows(NullPointerException.class, () -> binarySearchTree.delete(value));
     }
 
     @ParameterizedTest(name = "{index} test case")
@@ -207,7 +233,7 @@ class BinarySearchTreeTest {
     }
 
     private BinarySearchTree buildTree() {
-        int[] nodeValues = new int[]{15, 6, 7, 3, 2, 4, 13, 9, 18, 17, 20, 14};
+        int[] nodeValues = new int[]{15, 6, 7, 3, 2, 4, 5, 13, 9, 18, 17, 20, 14};
         final BinarySearchTree binarySearchTree = new BinarySearchTree();
         fillUpTree(nodeValues, binarySearchTree);
         return binarySearchTree;
