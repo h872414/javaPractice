@@ -249,9 +249,20 @@ public class BinarySearchTree {
         }
     }
 
+    /**
+     * Delete a given node if exists in the tree.
+     *
+     * @param value Node value to be deleted
+     *
+     * @throws IllegalArgumentException if value is not stored in the tree
+     */
     public void delete(final Integer value) {
         Node nodeToDelete = ifTreeDoNotHasNodeThrowsIllegalArgumentException(value);
         deleteNode(nodeToDelete);
+    }
+
+    private Node ifTreeDoNotHasNodeThrowsIllegalArgumentException(int value) {
+        return search(value);
     }
 
     private void deleteNode(final @NonNull Node node) {
@@ -260,10 +271,6 @@ public class BinarySearchTree {
         } else {
             deleteNodeWithChild(node);
         }
-    }
-
-    private Node ifTreeDoNotHasNodeThrowsIllegalArgumentException(int value) {
-        return search(value);
     }
 
     private boolean checkIfNodeIsALeaf(final Node node) {
