@@ -18,8 +18,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class BSTTest {
-    private BST bst;
+class BinarySearchTreeTest {
+    private BinarySearchTree binarySearchTree;
 
     @Value
     private static class TestCaseForBST {
@@ -62,100 +62,116 @@ class BSTTest {
     }
 
     @Ignore
-    @DisplayName("BST simpleTest")
     @ParameterizedTest(name = "{index} test case")
     @MethodSource("dataForSimpleTest")
     void simpleTest(TestCaseForBST testCase) {
     }
 
-    @DisplayName("Inorder test")
     @ParameterizedTest(name = "{index} test case")
     @MethodSource("dataForSimpleTest")
     void inOrderTest(TestCaseForBST testCase) {
-        final BST bst = new BST();
-        fillUpTree(testCase.nodeValues, bst);
+        final BinarySearchTree binarySearchTree = new BinarySearchTree();
+        fillUpTree(testCase.nodeValues, binarySearchTree);
         final ArrayList<Node> expectedNodes = convertIntArrayToArrayList(testCase.nodeInOrder);
-        assertThat(expectedNodes, is(bst.inOrder()));
+        assertThat(expectedNodes, is(binarySearchTree.inOrder()));
     }
 
-    @DisplayName("Inorder test with repeated value")
     @ParameterizedTest(name = "{index} test case")
     @ValueSource(ints = {1, 2})
     void inOrderRepeatedValueTest(int value) {
-        final BST bst = new BST();
-        bst.insert(value);
-        assertThrows(IllegalArgumentException.class, () -> bst.insert(value));
+        final BinarySearchTree binarySearchTree = new BinarySearchTree();
+        binarySearchTree.insert(value);
+        assertThrows(IllegalArgumentException.class, () -> binarySearchTree.insert(value));
     }
 
-    @DisplayName("Inorder test with null")
     @ParameterizedTest(name = "{index} test case")
     @NullSource
     void inOrderNullTest(Integer value) {
-        final BST bst = new BST();
-        assertThrows(NullPointerException.class, () -> bst.insert(value));
+        final BinarySearchTree binarySearchTree = new BinarySearchTree();
+        assertThrows(NullPointerException.class, () -> binarySearchTree.insert(value));
     }
 
     @ParameterizedTest(name = "{index} test case")
     @MethodSource("dataForNextTest")
-    @DisplayName("nextNode test")
     void nextNodeTest(TestCaseForSearchBST testCase) {
-        bst = buildTree();
-        final Node node = bst.search(testCase.value);
-        assertThat(testCase.nextValue, is(bst.nextNode(node).getValue()));
+        binarySearchTree = buildTree();
+        final Node node = binarySearchTree.search(testCase.value);
+        assertThat(testCase.nextValue, is(binarySearchTree.nextNode(node).getValue()));
     }
 
     @Test
-    @DisplayName("nextNode last element test")
     void nextNodeLastElementTest() {
-        bst = buildTree();
-        Node node = bst.search(20);
-        assertThrows(IllegalArgumentException.class, () -> bst.nextNode(node));
+        binarySearchTree = buildTree();
+        Node node = binarySearchTree.search(20);
+        assertThrows(IllegalArgumentException.class, () -> binarySearchTree.nextNode(node));
     }
 
     @ParameterizedTest(name = "{index} test case")
     @NullSource
     @DisplayName("nextNode null test")
     void nextNodeNullTest(Node node) {
-        bst = buildTree();
-        assertThrows(NullPointerException.class, () -> bst.nextNode(node));
+        binarySearchTree = buildTree();
+        assertThrows(NullPointerException.class, () -> binarySearchTree.nextNode(node));
     }
 
     @DisplayName("search test")
     @ParameterizedTest(name = "{index} test case")
     @ValueSource(ints = {15, 6, 7, 3, 2, 4, 13, 9, 18, 17, 20})
     void searchTest(int value) {
-        bst = buildTree();
-        assertThat(value, is(bst.search(value).getValue()));
+        binarySearchTree = buildTree();
+        assertThat(value, is(binarySearchTree.search(value).getValue()));
     }
 
-    @DisplayName("search test with duplicated value")
     @Test
     void searchInEmptyTreeTest() {
-        final BST bst = new BST();
-        assertThrows(NullPointerException.class, () -> bst.search(1));
+        final BinarySearchTree binarySearchTree = new BinarySearchTree();
+        assertThrows(NullPointerException.class, () -> binarySearchTree.search(1));
     }
 
-    @DisplayName("search test with null value")
     @Test
     void searchNullTest() {
-        final BST bst = new BST();
-        assertThrows(NullPointerException.class, () -> bst.insert(null));
+        final BinarySearchTree binarySearchTree = new BinarySearchTree();
+        assertThrows(NullPointerException.class, () -> binarySearchTree.insert(null));
+    }
+
+    @Test
+    void minTest() {
+        binarySearchTree = buildTree();
+        assertThat(2, is(binarySearchTree.min().getValue()));
+    }
+
+    @Test
+    void minInEmptyTreeTest() {
+        binarySearchTree = new BinarySearchTree();
+        assertThrows(IllegalStateException.class, () -> binarySearchTree.min());
+    }
+
+    @Test
+    void maxTest() {
+        binarySearchTree = buildTree();
+        assertThat(20, is(binarySearchTree.max().getValue()));
+    }
+
+    @Test
+    void maxInEmptyTreeTest() {
+        binarySearchTree = new BinarySearchTree();
+        assertThrows(IllegalStateException.class, () -> binarySearchTree.max());
     }
 
     private ArrayList<Node> convertIntArrayToArrayList(int[] array) {
         return (ArrayList<Node>) Arrays.stream(array).mapToObj(Node::new).collect(Collectors.toList());
     }
 
-    private void fillUpTree(int[] array, BST bst) {
+    private void fillUpTree(int[] array, BinarySearchTree binarySearchTree) {
         for (int nodeValue : array) {
-            bst.insert(nodeValue);
+            binarySearchTree.insert(nodeValue);
         }
     }
 
-    private BST buildTree() {
+    private BinarySearchTree buildTree() {
         int[] nodeValues = new int[]{15, 6, 7, 3, 2, 4, 13, 9, 18, 17, 20, 14};
-        final BST bst = new BST();
-        fillUpTree(nodeValues, bst);
-        return bst;
+        final BinarySearchTree binarySearchTree = new BinarySearchTree();
+        fillUpTree(nodeValues, binarySearchTree);
+        return binarySearchTree;
     }
 }

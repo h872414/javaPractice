@@ -24,10 +24,10 @@ import java.util.Collection;
  *     <li>lookup</li>
  * </ul>
  */
-public class BST {
+public class BinarySearchTree {
     private Node root;
 
-    public BST() {
+    public BinarySearchTree() {
         this.root = null;
     }
 
@@ -193,6 +193,40 @@ public class BST {
             return node;
         }
         return searchNextInLeft(node.getLeft());
+    }
+
+    /**
+     * Gives the smallest {@code node}
+     *
+     * @return return the min element(by key) stored in the tree
+     */
+    public Node min() {
+        ifTreeIsEmptyThrowsNewIllegalSateException();
+        Node min = root;
+        while (min.getLeft() != null) {
+            min = min.getLeft();
+        }
+        return min;
+    }
+
+    private void ifTreeIsEmptyThrowsNewIllegalSateException() {
+        if (root == null) {
+            throw new IllegalStateException("Tree is empty");
+        }
+    }
+
+    /**
+     * Gives the greatest {@code node}
+     *
+     * @return return the max element(by key) stored in the tree
+     */
+    public Node max() {
+        ifTreeIsEmptyThrowsNewIllegalSateException();
+        Node max = root;
+        while (max.getRight() != null) {
+            max = max.getRight();
+        }
+        return max;
     }
 
     @Override
