@@ -1,5 +1,7 @@
 package main.java.datastructures;
 
+import lombok.NonNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -27,6 +29,15 @@ public class BST {
 
     public BST() {
         this.root = null;
+    }
+
+    /**
+     * Access tot he tree
+     *
+     * @return the root of the tree
+     */
+    public Node getRoot() {
+        return root;
     }
 
     /**
@@ -118,12 +129,70 @@ public class BST {
     }
 
     /**
-     * Access tot he tree
+     * Search for a given value in the search tree
      *
-     * @return the root of the tree
+     * @param value searched value
+     *
+     * @return return the {@code node} which contains the {@code value}
+     *
+     * @throws IllegalArgumentException if the value is not in the three
      */
-    public Node getRoot() {
-        return root;
+    public Node search(final @NonNull Integer value) {
+        return searchForNode(root, value);
+    }
+
+    private Node searchForNode(final Node root, final Integer value) {
+        if (root.getValue() == value) {
+            return root;
+        }
+        return checkNodeCanBeAppended(root, value);
+    }
+
+    private Node checkNodeCanBeAppended(final Node node, final Integer value) {
+        if ((Integer) node.getValue() > value) {
+            checkIfNodeNullThenThrowException(node.getLeft());
+            return searchForNode(node.getLeft(), value);
+        } else {
+            checkIfNodeNullThenThrowException(node.getRight());
+            return searchForNode(node.getRight(), value);
+        }
+    }
+
+    private void checkIfNodeNullThenThrowException(final Node node) {
+        if (node == null) {
+            throw new IllegalArgumentException("Tree does not contains the value");
+        }
+    }
+
+    /**
+     * Gives the next node(by stored ky) in the tree
+     *
+     * @param node node which next we are looking for
+     *
+     * @return the next {@code node} by key
+     */
+    public Node nextNode(final @NonNull Node node) {
+        if (node.getRight() == null) {
+            return searchNextInParents(node);
+        }
+        return searchNextInLeft(node.getRight());
+    }
+
+    private Node searchNextInParents(final Node child) {
+        if (child.getParent() == root) {
+            throw new IllegalArgumentException("Last element of the three");
+        }
+        if ((Integer) child.getParent().getValue() > (Integer) child.getValue()) {
+            return child.getParent();
+        }
+        return searchNextInParents(child.getParent());
+    }
+
+    private Node searchNextInLeft(final Node node) {
+        if (node.getLeft() == null) {
+            return node;
+        }
+        return searchNextInLeft(node.getLeft());
     }
 
     @Override

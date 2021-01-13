@@ -37,6 +37,14 @@ public class Node {
         return right;
     }
 
+    public Object getValue() {
+        return value;
+    }
+
+    public Node getParent() {
+        return parent;
+    }
+
     public void setLeftChild(final Node left) {
         this.left = left;
     }
