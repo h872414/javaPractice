@@ -165,7 +165,37 @@ public class BinarySearchTree {
     }
 
     /**
-     * Gives the next node(by stored ky) in the tree
+     * Gives the previous node(by stored key) in the tree
+     *
+     * @param node node which previous, we are looking for
+     *
+     * @return the previous {@code node} by key
+     */
+    public Node previousNode(final @NonNull Node node) {
+        if (node.getLeft() == null) {
+            return searchPreviousInParents(node);
+        }
+
+        return searchPreviousInRight(node.getLeft());
+    }
+
+    private Node searchPreviousInParents(final Node child) {
+        if (child.getParent() != null && (Integer) child.getParent().getValue() < (Integer) child.getValue()) {
+            return child.getParent();
+        }
+        ifNodeIsRootThrowsIllegalArgumentException(child, "First element of the tree");
+        return searchPreviousInParents(child.getParent());
+    }
+
+    private Node searchPreviousInRight(final Node node) {
+        if (node.getRight() == null) {
+            return node;
+        }
+        return searchPreviousInRight(node.getRight());
+    }
+
+    /**
+     * Gives the next node(by stored key) in the tree
      *
      * @param node node which next we are looking for
      *
@@ -179,13 +209,17 @@ public class BinarySearchTree {
     }
 
     private Node searchNextInParents(final Node child) {
-        if (child.getParent() == root) {
-            throw new IllegalArgumentException("Last element of the three");
-        }
+        ifNodeIsRootThrowsIllegalArgumentException(child.getParent(), "Last element of the three");
         if ((Integer) child.getParent().getValue() > (Integer) child.getValue()) {
             return child.getParent();
         }
         return searchNextInParents(child.getParent());
+    }
+
+    private void ifNodeIsRootThrowsIllegalArgumentException(final Node node, String msg) {
+        if (node.equals(root)) {
+            throw new IllegalArgumentException(msg);
+        }
     }
 
     private Node searchNextInLeft(final Node node) {

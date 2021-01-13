@@ -28,10 +28,11 @@ class BinarySearchTreeTest {
     }
 
     @Value
-    private static class TestCaseForSearchBST {
+    private static class TestCaseForNexAndPrevioustBST {
         int value;
-        int nextValue;
+        int expected;
     }
+
 
     private static Collection<TestCaseForBST> dataForSimpleTest() {
         return Arrays.asList(
@@ -46,18 +47,34 @@ class BinarySearchTreeTest {
         );
     }
 
-    private static Collection<TestCaseForSearchBST> dataForNextTest() {
+    private static Collection<TestCaseForNexAndPrevioustBST> dataForNextTest() {
         return Arrays.asList(
-            new TestCaseForSearchBST(2, 3),
-            new TestCaseForSearchBST(3, 4),
-            new TestCaseForSearchBST(4, 6),
-            new TestCaseForSearchBST(6, 7),
-            new TestCaseForSearchBST(7, 9),
-            new TestCaseForSearchBST(9, 13),
-            new TestCaseForSearchBST(13, 14),
-            new TestCaseForSearchBST(15, 17),
-            new TestCaseForSearchBST(17, 18),
-            new TestCaseForSearchBST(18, 20)
+            new TestCaseForNexAndPrevioustBST(2, 3),
+            new TestCaseForNexAndPrevioustBST(3, 4),
+            new TestCaseForNexAndPrevioustBST(4, 6),
+            new TestCaseForNexAndPrevioustBST(6, 7),
+            new TestCaseForNexAndPrevioustBST(7, 9),
+            new TestCaseForNexAndPrevioustBST(9, 13),
+            new TestCaseForNexAndPrevioustBST(13, 14),
+            new TestCaseForNexAndPrevioustBST(15, 17),
+            new TestCaseForNexAndPrevioustBST(17, 18),
+            new TestCaseForNexAndPrevioustBST(18, 20)
+        );
+    }
+
+    private static Collection<TestCaseForNexAndPrevioustBST> dataForPreviousTest() {
+        return Arrays.asList(
+            new TestCaseForNexAndPrevioustBST(3, 2),
+            new TestCaseForNexAndPrevioustBST(4, 3),
+            new TestCaseForNexAndPrevioustBST(6, 4),
+            new TestCaseForNexAndPrevioustBST(7, 6),
+            new TestCaseForNexAndPrevioustBST(9, 7),
+            new TestCaseForNexAndPrevioustBST(13, 9),
+            new TestCaseForNexAndPrevioustBST(14, 13),
+            new TestCaseForNexAndPrevioustBST(15, 14),
+            new TestCaseForNexAndPrevioustBST(17, 15),
+            new TestCaseForNexAndPrevioustBST(18, 17),
+            new TestCaseForNexAndPrevioustBST(20, 18)
         );
     }
 
@@ -91,12 +108,34 @@ class BinarySearchTreeTest {
         assertThrows(NullPointerException.class, () -> binarySearchTree.insert(value));
     }
 
-    @ParameterizedTest(name = "{index} test case")
-    @MethodSource("dataForNextTest")
-    void nextNodeTest(TestCaseForSearchBST testCase) {
+    @ParameterizedTest(name = "{index}")
+    @MethodSource("dataForPreviousTest")
+    void previousNodeTest(TestCaseForNexAndPrevioustBST testCase) {
         binarySearchTree = buildTree();
         final Node node = binarySearchTree.search(testCase.value);
-        assertThat(testCase.nextValue, is(binarySearchTree.nextNode(node).getValue()));
+        assertThat(testCase.expected, is(binarySearchTree.previousNode(node).getValue()));
+    }
+
+    @ParameterizedTest
+    @NullSource
+    void previousNodeNullTest(final Node node) {
+        binarySearchTree = buildTree();
+        assertThrows(NullPointerException.class, () -> binarySearchTree.previousNode(node));
+    }
+
+    @Test
+    void previousNodeFirstElementTest() {
+        binarySearchTree = buildTree();
+        Node node = buildTree().search(2);
+        assertThrows(IllegalArgumentException.class, () -> binarySearchTree.previousNode(node));
+    }
+
+    @ParameterizedTest(name = "{index} test case")
+    @MethodSource("dataForNextTest")
+    void nextNodeTest(TestCaseForNexAndPrevioustBST testCase) {
+        binarySearchTree = buildTree();
+        final Node node = binarySearchTree.search(testCase.value);
+        assertThat(testCase.expected, is(binarySearchTree.nextNode(node).getValue()));
     }
 
     @Test
@@ -114,7 +153,6 @@ class BinarySearchTreeTest {
         assertThrows(NullPointerException.class, () -> binarySearchTree.nextNode(node));
     }
 
-    @DisplayName("search test")
     @ParameterizedTest(name = "{index} test case")
     @ValueSource(ints = {15, 6, 7, 3, 2, 4, 13, 9, 18, 17, 20})
     void searchTest(int value) {
