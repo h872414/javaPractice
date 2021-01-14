@@ -237,6 +237,14 @@ class BinarySearchTreeTest {
         assertThrows(IllegalStateException.class, () -> binarySearchTree.max());
     }
 
+    @Test
+    void sizeTest() {
+        binarySearchTree = new BinarySearchTree();
+        assertThat(0, is(binarySearchTree.size()));
+        binarySearchTree = buildTree();
+        assertThat(13, is(binarySearchTree.size()));
+    }
+
     private ArrayList<Node> convertIntArrayToArrayList(int[] array) {
         return (ArrayList<Node>) Arrays.stream(array).mapToObj(Node::new).collect(Collectors.toList());
     }

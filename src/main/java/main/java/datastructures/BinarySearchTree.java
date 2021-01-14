@@ -107,8 +107,18 @@ public class BinarySearchTree {
      * @return the {@code Collection} of {@code Nodes} stored in the tree
      */
     public Collection<Node> inOrder() {
-        final ArrayList<Node> nodes = new ArrayList<>();
+        ArrayList<Node> nodes = new ArrayList<>();
         return getSubtree(root, nodes);
+    }
+
+    /**
+     * Gives the number of elements stored in the tree
+     *
+     * @return return the number of nodes in the tree
+     */
+    public int size() {
+        final ArrayList<Node> nodes = new ArrayList<>();
+        return getSubtree(root, nodes).size();
     }
 
     /**
