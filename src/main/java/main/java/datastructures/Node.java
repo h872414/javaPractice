@@ -29,6 +29,14 @@ public class Node {
         this.key = hashCode();
     }
 
+    private Node(final int key, final Object value, final Node parent, final Node left, final Node right) {
+        this.key = key;
+        this.value = value;
+        this.parent = parent;
+        this.left = left;
+        this.right = right;
+    }
+
     public Node getLeft() {
         return left;
     }
@@ -54,6 +62,7 @@ public class Node {
     }
 
     public void setRightChild(final Node right) {
+
         this.right = right;
     }
 
@@ -63,8 +72,8 @@ public class Node {
 
     @Override
     public String toString() {
-        String leftStr = right == null ? "null" : String.valueOf(getLeft().getKey());
-        String rightStr = left == null ? "null" : String.valueOf(getRight().getKey());
+        String leftStr = left == null ? "null" : String.valueOf(getLeft().getKey());
+        String rightStr = right == null ? "null" : String.valueOf(getRight().getKey());
         String parentStr = parent == null ? "null" : String.valueOf(getParent().getKey());
 
         return "Node{" +
@@ -73,6 +82,11 @@ public class Node {
             ", left=" + leftStr +
             ", right=" + rightStr +
             '}';
+    }
+
+    @Override
+    protected Object clone() {
+        return new Node(key, value, parent, left, right);
     }
 
     @Override

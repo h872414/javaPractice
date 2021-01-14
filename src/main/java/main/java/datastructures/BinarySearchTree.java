@@ -37,7 +37,7 @@ public class BinarySearchTree {
      * @return the root of the tree
      */
     public Node getRoot() {
-        return root;
+        return (Node) root.clone();
     }
 
     /**
@@ -132,7 +132,7 @@ public class BinarySearchTree {
     private ArrayList<Node> getSubtree(final Node root, ArrayList<Node> nodes) {
         if (root != null) {
             getSubtree(root.getLeft(), nodes);
-            nodes.add(root);
+            nodes.add((Node) root.clone());
             getSubtree(root.getRight(), nodes);
         }
         return nodes;
@@ -148,7 +148,7 @@ public class BinarySearchTree {
      * @throws IllegalArgumentException if the value is not in the three
      */
     public Node search(final @NonNull Integer value) {
-        return searchForNode(root, value);
+        return (Node) searchForNode(root, value).clone();
     }
 
     private Node searchForNode(final Node root, final Integer value) {
@@ -183,10 +183,10 @@ public class BinarySearchTree {
      */
     public Node previousNode(final @NonNull Node node) {
         if (node.getLeft() == null) {
-            return searchPreviousInParents(node);
+            return (Node) searchPreviousInParents(node).clone();
         }
 
-        return searchPreviousInRight(node.getLeft());
+        return (Node) searchPreviousInRight(node.getLeft()).clone();
     }
 
     private Node searchPreviousInParents(final Node child) {
@@ -213,9 +213,9 @@ public class BinarySearchTree {
      */
     public Node nextNode(final @NonNull Node node) {
         if (node.getRight() == null) {
-            return searchNextInParents(node);
+            return (Node) searchNextInParents(node).clone();
         }
-        return searchNextInLeft(node.getRight());
+        return (Node) searchNextInLeft(node.getRight()).clone();
     }
 
     private Node searchNextInParents(final Node child) {
@@ -250,7 +250,7 @@ public class BinarySearchTree {
         while (min.getLeft() != null) {
             min = min.getLeft();
         }
-        return min;
+        return (Node) min.clone();
     }
 
     private void ifTreeIsEmptyThrowsNewIllegalSateException() {
@@ -387,7 +387,7 @@ public class BinarySearchTree {
         while (max.getRight() != null) {
             max = max.getRight();
         }
-        return max;
+        return (Node) max.clone();
     }
 
     @Override
