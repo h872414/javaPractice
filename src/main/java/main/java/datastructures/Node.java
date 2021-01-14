@@ -61,10 +61,6 @@ public class Node {
         this.parent = parent;
     }
 
-    public void clearLeft() {
-        this.left = null;
-    }
-
     @Override
     public String toString() {
         String leftStr = this.getLeft() == null ? "null" : String.valueOf(this.getLeft().getKey());

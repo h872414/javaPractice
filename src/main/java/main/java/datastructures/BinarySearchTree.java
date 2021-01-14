@@ -279,7 +279,7 @@ public class BinarySearchTree {
 
     private void deleteNodeWithNoChild(final Node node) {
         if (node.getParent().getLeft().equals(node)) {
-            node.getParent().clearLeft();
+            node.getParent().setLeftChild(null);
         } else {
             node.getParent().setRightChild(null);
         }
