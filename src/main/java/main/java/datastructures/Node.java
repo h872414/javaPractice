@@ -63,12 +63,13 @@ public class Node {
 
     @Override
     public String toString() {
-        String leftStr = this.getLeft() == null ? "null" : String.valueOf(this.getLeft().getKey());
-        String rightStr = this.getRight() == null ? "null" : String.valueOf(this.getRight().getKey());
+        String leftStr = right == null ? "null" : String.valueOf(getLeft().getKey());
+        String rightStr = left == null ? "null" : String.valueOf(getRight().getKey());
+        String parentStr = parent == null ? "null" : String.valueOf(getParent().getKey());
 
         return "Node{" +
             "key=" + key +
-            ", parent=" + parent.getKey() +
+            ", parent=" + parentStr +
             ", left=" + leftStr +
             ", right=" + rightStr +
             '}';

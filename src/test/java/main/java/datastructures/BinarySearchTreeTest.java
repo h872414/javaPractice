@@ -33,7 +33,6 @@ class BinarySearchTreeTest {
         int expected;
     }
 
-
     private static Collection<TestCaseForBST> dataForSimpleTest() {
         return Arrays.asList(
             new TestCaseForBST(new int[]{2, 1, 3}, new int[]{1, 2, 3}),
@@ -96,13 +95,16 @@ class BinarySearchTreeTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {2, 7, 3, 18})
+    @ValueSource(ints = {2, 7, 3, 15, 18, 4})
     void deleteTest(int value) {
         BinarySearchTree binarySearchTree = buildTree();
         int[] nodeValuesInOrder = new int[]{2, 3, 4, 5, 6, 7, 9, 13, 14, 15, 17, 18, 20};
         final ArrayList<Node> expectedNodes = convertIntArrayToArrayList(nodeValuesInOrder);
         expectedNodes.remove(new Node(value));
         binarySearchTree.delete(value);
+        for (Node node : binarySearchTree.inOrder()) {
+            System.out.println(node.getValue());
+        }
         assertThat(expectedNodes, is(binarySearchTree.inOrder()));
     }
 
@@ -117,6 +119,19 @@ class BinarySearchTreeTest {
     void deleteNullTest(Integer value) {
         BinarySearchTree binarySearchTree = buildTree();
         assertThrows(NullPointerException.class, () -> binarySearchTree.delete(value));
+    }
+
+    @Test
+    void deleteEmptyTreeTest() {
+        binarySearchTree = new BinarySearchTree();
+        assertThrows(NullPointerException.class, () -> binarySearchTree.delete(2));
+    }
+
+    @Test
+    void deleteRootTest() {
+        binarySearchTree = buildTree();
+        binarySearchTree.delete(15);
+        assertThat(17, is(binarySearchTree.getRoot().getValue()));
     }
 
     @ParameterizedTest(name = "{index} test case")

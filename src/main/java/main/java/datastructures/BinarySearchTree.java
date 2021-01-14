@@ -312,22 +312,57 @@ public class BinarySearchTree {
         replaceNode(node, nextNode);
     }
 
-    private void appendRightChildrenIfExists(Node oldNode) {
-        if (oldNode.getRight() != null) {
-            Node rightChildren = oldNode.getRight();
-            oldNode.getParent().setRightChild(rightChildren);
-            rightChildren.setParent(oldNode.getParent());
+    private void appendRightChildrenIfExists(Node nextNode) {
+        if (nextNode.getRight() != null) {
+            Node rightChildren = nextNode.getRight();
+            ifReplacedNodeIsLeftChildUpdateParent(nextNode, rightChildren);
+            ifReplacedNodeIsRightChildUpdateParent(nextNode, rightChildren);
         }
     }
 
-    private void replaceNode(Node oldNode, Node newNode) {
-        newNode.setLeftChild(oldNode.getLeft());
-        newNode.setParent(oldNode.getParent());
+    private void replaceNode(Node replacedNode, Node newNode) {
+        setNewNodeLeftChildFromReplacedNode(replacedNode, newNode);
+        removeNewNodeFromOldPlace(newNode);
+        if (!root.equals(replacedNode)) {
+            newNode.setParent(replacedNode.getParent());
+            ifReplacedNodeIsNotRootUpdateParent(replacedNode, newNode);
+        }
+        ifReplacedNodeIsRootUpdateRoot(replacedNode, newNode);
+    }
 
-        if (oldNode.getParent().getLeft().equals(oldNode)) {
-            oldNode.getParent().setLeftChild(newNode);
-        } else {
-            oldNode.getParent().setRightChild(newNode);
+    private void setNewNodeLeftChildFromReplacedNode(Node replacedNode, Node newNode) {
+        newNode.setLeftChild(replacedNode.getLeft());
+    }
+
+    private void removeNewNodeFromOldPlace(Node newNode) {
+        newNode.getParent().setLeftChild(null);
+        newNode.setParent(null);
+    }
+
+    private void ifReplacedNodeIsRootUpdateRoot(Node oldNode, Node newNode) {
+        if (oldNode.equals(root)) {
+            newNode.setRightChild(root.getRight());
+            newNode.getRight().setParent(newNode);
+            root = newNode;
+        }
+    }
+
+    private void ifReplacedNodeIsNotRootUpdateParent(final Node replacedNode, final Node newNode) {
+        if (replacedNode != root) {
+            ifReplacedNodeIsLeftChildUpdateParent(replacedNode, newNode);
+            ifReplacedNodeIsRightChildUpdateParent(replacedNode, newNode);
+        }
+    }
+
+    private void ifReplacedNodeIsLeftChildUpdateParent(Node replacedNode, Node newNode) {
+        if (replacedNode.getParent().getLeft().equals(replacedNode)) {
+            replacedNode.getParent().setLeftChild(newNode);
+        }
+    }
+
+    private void ifReplacedNodeIsRightChildUpdateParent(Node replacedNode, Node newNode) {
+        if (replacedNode.getParent().getRight().equals(replacedNode)) {
+            replacedNode.getParent().setRightChild(newNode);
         }
     }
 
