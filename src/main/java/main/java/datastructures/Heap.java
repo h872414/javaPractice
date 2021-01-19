@@ -8,9 +8,11 @@ public class Heap {
     Node root;
     Node tmpRoot;
     Node lastElement;
+    private int size;
 
     public Heap() {
         root = null;
+        size = 0;
     }
 
     public @NonNull Node max() {
@@ -26,6 +28,7 @@ public class Heap {
         } else {
             insertNodeToTheNextEmptyPlace(value);
         }
+        size++;
     }
 
     private boolean isRootEmpty() {
@@ -195,14 +198,43 @@ public class Heap {
         final Node node = root;
         tmpRoot = root;
         root = null;
+        size--;
+        if (size > 0) {
+            moveLastElementToRoot();
+        }
         return node;
     }
 
     public void moveLastElementToRoot() {
-
+        Node newRoot = (Node) lastElement.clone();
+        root = newRoot;
+        newRoot.setRightChild(tmpRoot.getRight());
+        newRoot.setLeftChild(tmpRoot.getLeft());
+        newRoot.setParent(null);
+        setParentForLeftChild(lastElement, tmpRoot.getLeft());
+        setParentForRightChild(lastElement, tmpRoot.getRight());
+        if (isLeftNode(lastElement)) {
+            lastElement.getParent().setLeftChild(null);
+        } else {
+            lastElement.getParent().setRightChild(null);
+        }
+        lastElement = null;
     }
 
     public @NonNull Node getLastElement(final @NonNull Node root) {
+        Edge edge = new Edge(root);
+        Node node = root;
+        Node possibleLastElement = null;
+        while (!edge.isEmpty()) {
+            node = (Node) edge.getNext();
+            if (isLeaf(node)) {
+                possibleLastElement = node;
+            } else {
+                updateEdge(edge, node);
+            }
+        }
+        System.out.println(possibleLastElement);
+        lastElement = possibleLastElement;
         return lastElement;
     }
 }

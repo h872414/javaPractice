@@ -1,7 +1,6 @@
 package main.java.datastructures;
 
 import lombok.NonNull;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
@@ -113,7 +112,6 @@ class HeapTest {
 //        assertThat(heap.popMax().getKey(), is(42));
     }
 
-    @Ignore
     @Test
     void moveLastElementToRootTest() {
         heap = buildHeap(heap);
@@ -125,6 +123,12 @@ class HeapTest {
     void lastElementTest() {
         heap = buildHeap(heap);
         assertThat(heap.getLastElement(heap.max()).getKey(), is(14));
+        assertThat(heap.popMax().getKey(), is(44));
+        assertThat(heap.getLastElement(heap.max()).getKey(), is(26));
+        heap.popMax();
+        assertThat(heap.getLastElement(heap.max()).getKey(), is(10));
+        heap.popMax();
+        assertThat(heap.getLastElement(heap.max()).getKey(), is(27));
     }
 
     private @NonNull Heap buildHeap(@NonNull Heap heap) {
