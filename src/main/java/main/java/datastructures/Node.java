@@ -62,7 +62,6 @@ public class Node {
     }
 
     public void setRightChild(final Node right) {
-
         this.right = right;
     }
 
@@ -91,7 +90,7 @@ public class Node {
 
     @Override
     public int hashCode() {
-        return this.value.hashCode();
+        return (int) this.value;
     }
 
     @Override
