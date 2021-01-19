@@ -152,22 +152,32 @@ public class Heap {
     private void updateChildrenAdRightNode(final @NonNull Node sourceNode, final @NonNull Node targetNode) {
         targetNode.setLeftChild(sourceNode.getLeft());
         targetNode.setRightChild(sourceNode);
-        if (targetNode.getLeft() != null) {
-            targetNode.getLeft().setParent(targetNode);
+        setParentForLeftChild(targetNode, targetNode.getLeft());
+    }
+
+    private void setParentForLeftChild(final Node parent, Node left) {
+        if (left != null) {
+            left.setParent(parent);
+        }
+    }
+
+    private void setParentForRightChild(final Node parent, Node right) {
+        if (right != null) {
+            right.setParent(parent);
         }
     }
 
     private void updateChildrenAsLeftNode(final @NonNull Node sourceNode, final @NonNull Node targetNode) {
         targetNode.setLeftChild(sourceNode);
         targetNode.setRightChild(sourceNode.getRight());
-        if (targetNode.getRight() != null) {
-            targetNode.getRight().setParent(targetNode);
-        }
+        setParentForRightChild(targetNode, targetNode.getRight());
     }
 
     private void updateSourceNodeChildren(final @NonNull Node sourceNode, final @NonNull Node tmpNode) {
         sourceNode.setLeftChild(tmpNode.getLeft());
         sourceNode.setRightChild(tmpNode.getRight());
+        setParentForLeftChild(sourceNode, sourceNode.getLeft());
+        setParentForRightChild(sourceNode, sourceNode.getRight());
     }
 
     private boolean isLeaf(final @NonNull Node node) {
@@ -193,9 +203,6 @@ public class Heap {
     }
 
     public @NonNull Node getLastElement(final @NonNull Node root) {
-        Edge edge = new Edge(root);
-        Node node = root;
-
-        return new Node(14);
+        return lastElement;
     }
 }

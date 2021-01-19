@@ -119,8 +119,6 @@ class HeapTest {
         heap = buildHeap(heap);
         assertThat(heap.popMax().getKey(), is(44));
         assertThrows(NullPointerException.class, () -> heap.popMax());
-        heap.moveLastElementToRoot();
-//        assertThat(heap.getLastElement().getKey(), is(14));
     }
 
     @Test
