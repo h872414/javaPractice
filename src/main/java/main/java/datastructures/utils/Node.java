@@ -1,4 +1,4 @@
-package main.java.datastructures;
+package main.java.datastructures.utils;
 
 /**
  * Represents a single node is a three
@@ -84,7 +84,7 @@ public class Node {
     }
 
     @Override
-    protected Object clone() {
+    public Object clone() {
         return new Node(key, value, parent, left, right);
     }
 

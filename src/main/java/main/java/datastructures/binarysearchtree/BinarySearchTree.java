@@ -1,6 +1,7 @@
-package main.java.datastructures;
+package main.java.datastructures.binarysearchtree;
 
 import lombok.NonNull;
+import main.java.datastructures.utils.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package main.java.datastructures;
+package main.java.datastructures.heap;
 
 import lombok.NonNull;
 import org.junit.jupiter.api.Test;
@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.NullSource;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class HeapTest {
@@ -109,27 +110,37 @@ class HeapTest {
     void popMaxTest() {
         heap = buildHeap(heap);
         assertThat(heap.popMax().getKey(), is(44));
-//        assertThat(heap.popMax().getKey(), is(42));
+        assertThat(heap.popMax().getKey(), is(14));
+        assertThat(heap.popMax().getKey(), is(26));
+        assertThat(heap.popMax().getKey(), is(10));
+        assertThat(heap.popMax().getKey(), is(27));
+        assertThat(heap.popMax().getKey(), is(19));
     }
 
     @Test
-    void moveLastElementToRootTest() {
-        heap = buildHeap(heap);
+    void popLastElementPopAgain_WillThrowNullPointerException() {
+        heap = new Heap();
+        heap.insert(44);
         assertThat(heap.popMax().getKey(), is(44));
         assertThrows(NullPointerException.class, () -> heap.popMax());
+        assertThrows(NullPointerException.class, () -> heap.max());
+        assertThat(heap.getLastElement(), nullValue());
+        assertThat(heap.getTmpRoot(), nullValue());
     }
 
-    @Test
-    void lastElementTest() {
-        heap = buildHeap(heap);
-        assertThat(heap.getLastElement(heap.max()).getKey(), is(14));
-        assertThat(heap.popMax().getKey(), is(44));
-        assertThat(heap.getLastElement(heap.max()).getKey(), is(26));
-        heap.popMax();
-        assertThat(heap.getLastElement(heap.max()).getKey(), is(10));
-        heap.popMax();
-        assertThat(heap.getLastElement(heap.max()).getKey(), is(27));
-    }
+//    @Test
+//    void lastElementTest() {
+//        heap = buildHeap(heap);
+//        assertThat(heap.getLastElement(heap.max()).getKey(), is(14));
+//        assertThat(heap.popMax().getKey(), is(44));
+//        assertThat(heap.getLastElement(heap.max()).getKey(), is(26));
+//        heap.popMax();
+//        assertThat(heap.getLastElement(heap.max()).getKey(), is(10));
+//        heap.popMax();
+//        assertThat(heap.getLastElement(heap.max()).getKey(), is(27));
+//        heap.popMax();
+//        assertThat(heap.getLastElement(heap.max()).getKey(), is(19));
+//    }
 
     private @NonNull Heap buildHeap(@NonNull Heap heap) {
         heap = new Heap();

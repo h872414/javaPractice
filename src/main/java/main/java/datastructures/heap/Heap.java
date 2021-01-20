@@ -1,13 +1,15 @@
-package main.java.datastructures;
+package main.java.datastructures.heap;
 
 import lombok.NonNull;
+import main.java.datastructures.utils.Node;
 import org.jetbrains.annotations.Nullable;
 
+import static main.java.datastructures.heap.HeapUtil.*;
+
 public class Heap {
-    private @Nullable
-    Node root;
-    Node tmpRoot;
-    Node lastElement;
+    private @Nullable Node root;
+    private @Nullable Node tmpRoot;
+    private @Nullable Node lastElement;
     private int size;
 
     public Heap() {
@@ -15,15 +17,23 @@ public class Heap {
         size = 0;
     }
 
+    public Node getLastElement() {
+        return lastElement;
+    }
+
+    public Node getTmpRoot() {
+        return tmpRoot;
+    }
+
     public @NonNull Node max() {
-        if (isRootEmpty()) {
+        if (root == null) {
             throw new NullPointerException("Root is empty");
         }
         return (Node) root.clone();
     }
 
     public void insert(final @NonNull Integer value) {
-        if (isRootEmpty()) {
+        if (root == null) {
             root = new Node(value);
         } else {
             insertNodeToTheNextEmptyPlace(value);
@@ -31,67 +41,14 @@ public class Heap {
         size++;
     }
 
-    private boolean isRootEmpty() {
-        return root == null;
-    }
-
     private void insertNodeToTheNextEmptyPlace(final @NonNull Integer value) {
-        Node nextNodeToAppend = getNextNodeToAppend();
+        Node nextNodeToAppend = getNextNodeToAppend(root);
         appendToNode(nextNodeToAppend, value);
-        orderTree(nextNodeToAppend);
+        lastElement = getLastElementFromTree(root);
+        orderHeap(nextNodeToAppend);
     }
 
-    private @NonNull Node getNextNodeToAppend() {
-        Edge edge = new Edge(root);
-        Node node = root;
-        while (!edge.isEmpty()) {
-            node = (Node) edge.getNext();
-            if (!hasNodeTwoChildren(node)) {
-                break;
-            }
-            updateEdge(edge, node);
-        }
-        return node;
-    }
-
-    private boolean hasNodeTwoChildren(final @NonNull Node node) {
-        return node.getLeft() != null && node.getRight() != null;
-    }
-
-    private void updateEdge(@NonNull Edge edge, @NonNull Node node) {
-        if (node.getLeft() != null) {
-            edge.add(node.getLeft());
-        }
-        if (node.getRight() != null) {
-            edge.add(node.getRight());
-        }
-    }
-
-    private void appendToNode(@NonNull Node nodeToAppend, final @NonNull Integer value) {
-        if (nodeToAppend.getLeft() == null) {
-            appendNewNodeToLeft(nodeToAppend, value);
-        } else {
-            addendNewNodeToRight(nodeToAppend, value);
-        }
-    }
-
-    private void appendNewNodeToLeft(@NonNull Node nodeToAppend, final @NonNull Integer value) {
-        Node newNode = new Node(value, nodeToAppend);
-        nodeToAppend.setLeftChild(newNode);
-        if (lastElement != newNode) {
-            lastElement = newNode;
-        }
-    }
-
-    private void addendNewNodeToRight(final @NonNull Node nodeToAppend, final @NonNull Integer value) {
-        Node newNode = new Node(value, nodeToAppend);
-        nodeToAppend.setRightChild(newNode);
-        if (lastElement != newNode) {
-            lastElement = newNode;
-        }
-    }
-
-    private void orderTree(@NonNull Node parent) {
+    private void orderHeap(@NonNull Node parent) {
         ifLeftChildIsGreaterThenParentSwapNodes(parent);
         ifRightChildIsGreaterThenParentSwapNodes(parent);
     }
@@ -128,7 +85,7 @@ public class Heap {
         sourceNode.setParent(targetNode);
 
         if (targetNode.getParent() != null) {
-            orderTree(targetNode.getParent());
+            orderHeap(targetNode.getParent());
         } else {
             root = targetNode;
         }
@@ -183,16 +140,12 @@ public class Heap {
         setParentForRightChild(sourceNode, sourceNode.getRight());
     }
 
-    private boolean isLeaf(final @NonNull Node node) {
-        return node.getLeft() == null && node.getRight() == null;
-    }
-
     private boolean isLeftNode(final @NonNull Node node) {
         return node.getParent().getLeft().equals(node);
     }
 
     public @NonNull Node popMax() {
-        if (root == null) {
+        if (size <= 0) {
             throw new NullPointerException("Heap is empty");
         }
         final Node node = root;
@@ -201,7 +154,11 @@ public class Heap {
         size--;
         if (size > 0) {
             moveLastElementToRoot();
+            lastElement = getLastElementFromTree(tmpRoot);
+        } else {
+            tmpRoot = null;
         }
+
         return node;
     }
 
@@ -218,23 +175,5 @@ public class Heap {
         } else {
             lastElement.getParent().setRightChild(null);
         }
-        lastElement = null;
-    }
-
-    public @NonNull Node getLastElement(final @NonNull Node root) {
-        Edge edge = new Edge(root);
-        Node node = root;
-        Node possibleLastElement = null;
-        while (!edge.isEmpty()) {
-            node = (Node) edge.getNext();
-            if (isLeaf(node)) {
-                possibleLastElement = node;
-            } else {
-                updateEdge(edge, node);
-            }
-        }
-        System.out.println(possibleLastElement);
-        lastElement = possibleLastElement;
-        return lastElement;
     }
 }

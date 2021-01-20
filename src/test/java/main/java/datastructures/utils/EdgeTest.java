@@ -1,4 +1,4 @@
-package main.java.datastructures;
+package main.java.datastructures.utils;
 
 import org.junit.jupiter.api.Test;
 
