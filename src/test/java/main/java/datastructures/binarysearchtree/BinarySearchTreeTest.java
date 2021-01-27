@@ -1,6 +1,7 @@
-package main.java.datastructures;
+package main.java.datastructures.binarysearchtree;
 
 import lombok.Value;
+import main.java.datastructures.utils.Node;
 import org.junit.Ignore;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
