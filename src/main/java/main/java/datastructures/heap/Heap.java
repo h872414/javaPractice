@@ -30,14 +30,14 @@ public class Heap {
     /**
      * Get last Node inserted into the {@code Heap}.
      */
-    public @Nullable Node getLastElement() {
+    protected @Nullable Node getLastElement() {
         return lastElement;
     }
 
     /**
      * Returns a copy of the max element.
      */
-    public @NonNull Node max() {
+    protected @NonNull Node max() {
         ifHeapIsEmptyThrowsNullPointerException();
         return root.copyNode();
     }
@@ -188,7 +188,7 @@ public class Heap {
         }
     }
 
-    public void moveLastElementToRoot() {
+    protected void moveLastElementToRoot() {
         Node newRoot = lastElement.copyNode();
         root = newRoot;
         newRoot.setRightChild(tmpRoot.getRightChild());

@@ -38,7 +38,7 @@ public class BinarySearchTree {
      * @return the root of the tree
      */
     public Node getRoot() {
-        return (Node) root.clone();
+        return (Node) root.copyNode();
     }
 
     /**
@@ -87,18 +87,18 @@ public class BinarySearchTree {
     }
 
     private void appendLeft(Node node, int value) {
-        if (node.getLeft() == null) {
+        if (node.getLeftChild() == null) {
             node.setLeftChild(new Node(value, node));
         } else {
-            append(node.getLeft(), value);
+            append(node.getLeftChild(), value);
         }
     }
 
     private void appendRight(Node node, int value) {
-        if (node.getRight() == null) {
+        if (node.getRightChild() == null) {
             node.setRightChild(new Node(value, node));
         } else {
-            append(node.getRight(), value);
+            append(node.getRightChild(), value);
         }
     }
 
@@ -132,9 +132,9 @@ public class BinarySearchTree {
      */
     private ArrayList<Node> getSubtree(final Node root, ArrayList<Node> nodes) {
         if (root != null) {
-            getSubtree(root.getLeft(), nodes);
-            nodes.add((Node) root.clone());
-            getSubtree(root.getRight(), nodes);
+            getSubtree(root.getLeftChild(), nodes);
+            nodes.add((Node) root.copyNode());
+            getSubtree(root.getRightChild(), nodes);
         }
         return nodes;
     }
@@ -149,7 +149,7 @@ public class BinarySearchTree {
      * @throws IllegalArgumentException if the value is not in the three
      */
     public Node search(final @NonNull Integer value) {
-        return (Node) searchForNode(root, value).clone();
+        return (Node) searchForNode(root, value).copyNode();
     }
 
     private Node searchForNode(final Node root, final Integer value) {
@@ -161,11 +161,11 @@ public class BinarySearchTree {
 
     private Node checkNodeCanBeAppended(final Node node, final Integer value) {
         if ((Integer) node.getValue() > value) {
-            checkIfNodeNullThenThrowException(node.getLeft());
-            return searchForNode(node.getLeft(), value);
+            checkIfNodeNullThenThrowException(node.getLeftChild());
+            return searchForNode(node.getLeftChild(), value);
         } else {
-            checkIfNodeNullThenThrowException(node.getRight());
-            return searchForNode(node.getRight(), value);
+            checkIfNodeNullThenThrowException(node.getRightChild());
+            return searchForNode(node.getRightChild(), value);
         }
     }
 
@@ -183,11 +183,11 @@ public class BinarySearchTree {
      * @return the previous {@code node} by key
      */
     public Node previousNode(final @NonNull Node node) {
-        if (node.getLeft() == null) {
-            return (Node) searchPreviousInParents(node).clone();
+        if (node.getLeftChild() == null) {
+            return (Node) searchPreviousInParents(node).copyNode();
         }
 
-        return (Node) searchPreviousInRight(node.getLeft()).clone();
+        return (Node) searchPreviousInRight(node.getLeftChild()).copyNode();
     }
 
     private Node searchPreviousInParents(final Node child) {
@@ -199,10 +199,10 @@ public class BinarySearchTree {
     }
 
     private Node searchPreviousInRight(final Node node) {
-        if (node.getRight() == null) {
+        if (node.getRightChild() == null) {
             return node;
         }
-        return searchPreviousInRight(node.getRight());
+        return searchPreviousInRight(node.getRightChild());
     }
 
     /**
@@ -213,10 +213,10 @@ public class BinarySearchTree {
      * @return the next {@code node} by key
      */
     public Node nextNode(final @NonNull Node node) {
-        if (node.getRight() == null) {
-            return (Node) searchNextInParents(node).clone();
+        if (node.getRightChild() == null) {
+            return (Node) searchNextInParents(node).copyNode();
         }
-        return (Node) searchNextInLeft(node.getRight()).clone();
+        return (Node) searchNextInLeft(node.getRightChild()).copyNode();
     }
 
     private Node searchNextInParents(final Node child) {
@@ -234,10 +234,10 @@ public class BinarySearchTree {
     }
 
     private Node searchNextInLeft(final Node node) {
-        if (node.getLeft() == null) {
+        if (node.getLeftChild() == null) {
             return node;
         }
-        return searchNextInLeft(node.getLeft());
+        return searchNextInLeft(node.getLeftChild());
     }
 
     /**
@@ -248,10 +248,10 @@ public class BinarySearchTree {
     public Node min() {
         ifTreeIsEmptyThrowsNewIllegalSateException();
         Node min = root;
-        while (min.getLeft() != null) {
-            min = min.getLeft();
+        while (min.getLeftChild() != null) {
+            min = min.getLeftChild();
         }
-        return (Node) min.clone();
+        return (Node) min.copyNode();
     }
 
     private void ifTreeIsEmptyThrowsNewIllegalSateException() {
@@ -285,11 +285,11 @@ public class BinarySearchTree {
     }
 
     private boolean checkIfNodeIsALeaf(final Node node) {
-        return node.getLeft() == null && node.getRight() == null;
+        return node.getLeftChild() == null && node.getRightChild() == null;
     }
 
     private void deleteNodeWithNoChild(final Node node) {
-        if (node.getParent().getLeft().equals(node)) {
+        if (node.getParent().getLeftChild().equals(node)) {
             node.getParent().setLeftChild(null);
         } else {
             node.getParent().setRightChild(null);
@@ -305,12 +305,12 @@ public class BinarySearchTree {
     }
 
     private boolean checkIfNodeHasTwoChildren(final Node node) {
-        return node.getLeft() != null && node.getRight() != null;
+        return node.getLeftChild() != null && node.getRightChild() != null;
     }
 
     private void deleteNodeWithOneChild(final Node node) {
-        Node child = node.getLeft() != null ? node.getLeft() : node.getRight();
-        if (node.getParent().getLeft().equals(node)) {
+        Node child = node.getLeftChild() != null ? node.getLeftChild() : node.getRightChild();
+        if (node.getParent().getLeftChild().equals(node)) {
             node.getParent().setLeftChild(child);
         } else {
             node.getParent().setRightChild(child);
@@ -324,8 +324,8 @@ public class BinarySearchTree {
     }
 
     private void appendRightChildrenIfExists(Node nextNode) {
-        if (nextNode.getRight() != null) {
-            Node rightChildren = nextNode.getRight();
+        if (nextNode.getRightChild() != null) {
+            Node rightChildren = nextNode.getRightChild();
             ifReplacedNodeIsLeftChildUpdateParent(nextNode, rightChildren);
             ifReplacedNodeIsRightChildUpdateParent(nextNode, rightChildren);
         }
@@ -342,7 +342,7 @@ public class BinarySearchTree {
     }
 
     private void setNewNodeLeftChildFromReplacedNode(Node replacedNode, Node newNode) {
-        newNode.setLeftChild(replacedNode.getLeft());
+        newNode.setLeftChild(replacedNode.getLeftChild());
     }
 
     private void removeNewNodeFromOldPlace(Node newNode) {
@@ -352,8 +352,8 @@ public class BinarySearchTree {
 
     private void ifReplacedNodeIsRootUpdateRoot(Node oldNode, Node newNode) {
         if (oldNode.equals(root)) {
-            newNode.setRightChild(root.getRight());
-            newNode.getRight().setParent(newNode);
+            newNode.setRightChild(root.getRightChild());
+            newNode.getRightChild().setParent(newNode);
             root = newNode;
         }
     }
@@ -366,13 +366,13 @@ public class BinarySearchTree {
     }
 
     private void ifReplacedNodeIsLeftChildUpdateParent(Node replacedNode, Node newNode) {
-        if (replacedNode.getParent().getLeft().equals(replacedNode)) {
+        if (replacedNode.getParent().getLeftChild().equals(replacedNode)) {
             replacedNode.getParent().setLeftChild(newNode);
         }
     }
 
     private void ifReplacedNodeIsRightChildUpdateParent(Node replacedNode, Node newNode) {
-        if (replacedNode.getParent().getRight().equals(replacedNode)) {
+        if (replacedNode.getParent().getRightChild().equals(replacedNode)) {
             replacedNode.getParent().setRightChild(newNode);
         }
     }
@@ -385,15 +385,15 @@ public class BinarySearchTree {
     public Node max() {
         ifTreeIsEmptyThrowsNewIllegalSateException();
         Node max = root;
-        while (max.getRight() != null) {
-            max = max.getRight();
+        while (max.getRightChild() != null) {
+            max = max.getRightChild();
         }
-        return (Node) max.clone();
+        return (Node) max.copyNode();
     }
 
     @Override
     public int hashCode() {
-        return root.hashCode() * root.getLeft().hashCode() * root.getRight().hashCode();
+        return root.hashCode() * root.getLeftChild().hashCode() * root.getRightChild().hashCode();
     }
 
     @Override
