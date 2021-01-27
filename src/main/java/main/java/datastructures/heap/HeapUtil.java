@@ -63,19 +63,19 @@ public class HeapUtil {
      * @param node {@code node} to be expanded
      */
     private static void edgeExpand(@NonNull Edge edge, @NonNull Node node) {
-        if (node.getLeft() != null) {
-            edge.add(node.getLeft());
+        if (node.getLeftChild() != null) {
+            edge.add(node.getLeftChild());
         }
-        if (node.getRight() != null) {
-            edge.add(node.getRight());
+        if (node.getRightChild() != null) {
+            edge.add(node.getRightChild());
         }
     }
 
     /**
      * Return true if {@code node} has no children, otherwise false.
      */
-    private static boolean isLeaf(final @NonNull Node node) {
-        return node.getLeft() == null && node.getRight() == null;
+    protected static boolean isNotLeaf(final @NonNull Node node) {
+        return !(node.getLeftChild() == null && node.getRightChild() == null);
     }
 
     /**
@@ -89,7 +89,7 @@ public class HeapUtil {
      * Append new {@code Node} with the given {@code Integer} {@code value}
      */
     protected static void appendToNode(@NonNull Node nodeToAppend, final @NonNull Integer value) {
-        if (nodeToAppend.getLeft() == null) {
+        if (nodeToAppend.getLeftChild() == null) {
             appendNewNodeToLeft(nodeToAppend, value);
         } else {
             addendNewNodeToRight(nodeToAppend, value);
@@ -110,5 +110,70 @@ public class HeapUtil {
     private static void addendNewNodeToRight(final @NonNull Node nodeToAppend, final @NonNull Integer value) {
         final @NonNull Node newNode = new Node(value, nodeToAppend);
         nodeToAppend.setRightChild(newNode);
+    }
+
+    /**
+     * Returns true if parent is greater than its left child.
+     */
+    static boolean isParentGreaterThanLeftChild(final @NonNull Node parent) {
+        return parent.getLeftChild() == null || parent.getKey() >= parent.getLeftChild().getKey();
+    }
+
+    /**
+     * Returns true if parent is greater than its right child.
+     */
+    static boolean isParentGreaterThanRightChild(final @NonNull Node parent) {
+        return parent.getRightChild() == null || parent.getKey() >= parent.getRightChild().getKey();
+    }
+
+    /**
+     * Checks if {@code sourceNode} parent is not null, appends {@code targetNode} to parent as its child.
+     */
+    static void ifParentIsNotNullSetTargetToChild(final @NonNull Node sourceNode, @NonNull Node targetNode) {
+        if (sourceNode.getParent() != null) {
+            setTargetToChild(sourceNode, targetNode);
+        }
+    }
+
+    /**
+     * Append {@code targetNode} to sourceNode.
+     */
+    private static void setTargetToChild(final Node sourceNode, final Node targetNode) {
+        if (isLeftNode(sourceNode)) {
+            assert sourceNode.getParent() != null;
+            sourceNode.getParent().setLeftChild(targetNode);
+        } else {
+            assert sourceNode.getParent() != null;
+            sourceNode.getParent().setRightChild(targetNode);
+        }
+    }
+
+    /**
+     * Returns true if {@code node} is a left child.
+     */
+    static boolean isLeftNode(final @NonNull Node node) {
+        if (node.getParent() != null) {
+            assert node.getParent().getLeftChild() != null;
+            return node.getParent().getLeftChild().equals(node);
+        }
+        return false;
+    }
+
+    /**
+     * Set the {@code parent} as a parent of {@code right} node.
+     */
+    static void setParentForRightChild(final Node parent, final Node right) {
+        if (right != null) {
+            right.setParent(parent);
+        }
+    }
+
+    /**
+     * Set the {@code parent} as a parent of {@code left} node.
+     */
+    static void setParentForLeftChild(final Node parent, Node left) {
+        if (left != null) {
+            left.setParent(parent);
+        }
     }
 }
