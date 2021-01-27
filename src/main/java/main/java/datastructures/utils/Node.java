@@ -1,5 +1,14 @@
 package main.java.datastructures.utils;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import org.jetbrains.annotations.Nullable;
+
+import static java.lang.String.format;
+
 /**
  * Represents a single node is a three
  *
@@ -11,88 +20,66 @@ package main.java.datastructures.utils;
  *      <li>{@code right} right child element of the node</li>
  * </ul>
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
 public class Node {
-    private final int key;
-    private final Object value;
-    private Node parent;
-    private Node left;
-    private Node right;
+    final int key;
+    final @NonNull Object value;
+    @Setter(AccessLevel.PUBLIC)
+    @Nullable Node parent;
+    @Setter(AccessLevel.PUBLIC)
+    @Nullable Node leftChild;
+    @Setter(AccessLevel.PUBLIC)
+    @Nullable Node rightChild;
 
-    public Node(final Object value) {
+    public Node(final @NonNull Object value) {
+        this(value, null, null, null);
+    }
+
+    public Node(final @NonNull Object value, final @Nullable Node parent) {
+        this(value, parent, null, null);
+    }
+
+    private Node(
+        final @NonNull Object value,
+        final @Nullable Node parent,
+        final @Nullable Node leftChild,
+        final @Nullable Node rightChild
+    ) {
         this.value = value;
+        this.parent = parent;
+        this.leftChild = leftChild;
+        this.rightChild = rightChild;
         this.key = hashCode();
-    }
-
-    public Node(final Object value, final Node parent) {
-        this.value = value;
-        this.parent = parent;
-        this.key = hashCode();
-    }
-
-    private Node(final int key, final Object value, final Node parent, final Node left, final Node right) {
-        this.key = key;
-        this.value = value;
-        this.parent = parent;
-        this.left = left;
-        this.right = right;
-    }
-
-    public Node getLeft() {
-        return left;
-    }
-
-    public Node getRight() {
-        return right;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public Node getParent() {
-        return parent;
-    }
-
-    public int getKey() {
-        return key;
-    }
-
-    public void setLeftChild(final Node left) {
-        this.left = left;
-    }
-
-    public void setRightChild(final Node right) {
-        this.right = right;
-    }
-
-    public void setParent(final Node parent) {
-        this.parent = parent;
     }
 
     @Override
     public String toString() {
-        String leftStr = left == null ? "null" : String.valueOf(getLeft().getKey());
-        String rightStr = right == null ? "null" : String.valueOf(getRight().getKey());
-        String parentStr = parent == null ? "null" : String.valueOf(getParent().getKey());
+        String parentStr = parent == null ? "null" : convertNodeToString(getParent());
+        String leftStr = leftChild == null ? "null" : convertNodeToString(getLeftChild());
+        String rightStr = rightChild == null ? "null" : convertNodeToString(getRightChild());
 
-        return "Node{" +
-            "key=" + key +
-            ", parent=" + parentStr +
-            ", left=" + leftStr +
-            ", right=" + rightStr +
-            '}';
+        return format("Node{ key=%s, parent=%s, left=%s, right=%s}", key, parentStr, leftStr, rightStr);
     }
 
-    @Override
-    public Object clone() {
-        return new Node(key, value, parent, left, right);
+    private @NonNull String convertNodeToString(final @Nullable Node node) {
+        if (node == null) {
+            return "null";
+        }
+        return String.valueOf(node.getKey());
     }
 
+    public @NonNull Node copyNode() {
+        return new Node(value, parent, leftChild, rightChild);
+    }
+
+    //This must be adjusted according to the element we'd like to store in the dataStructure
     @Override
     public int hashCode() {
         return (int) this.value;
     }
 
+    //This must be adjusted according to the element we'd like to store in the dataStructure
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -102,6 +89,6 @@ public class Node {
             return false;
         }
         final Node node = (Node) obj;
-        return hashCode() == node.hashCode();
+        return value == node.value;
     }
 }
