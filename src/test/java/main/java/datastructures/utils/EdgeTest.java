@@ -7,15 +7,15 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class EdgeTest {
-    Edge edge = new Edge();
+    Edge<Integer> edge = new Edge<>();
 
     @Test
-    void constructorTest() {
-        assertThrows(NullPointerException.class, () -> new Edge(null));
+    void constructor_Test() {
+        assertThrows(NullPointerException.class, () -> new Edge<Integer>(null));
     }
 
     @Test
-    void simpleTest() {
+    void simple_Test() {
         edge.add(2);
         assertThat(2, is(edge.getNext()));
         assertThrows(NullPointerException.class, () -> edge.getNext());
@@ -27,7 +27,18 @@ class EdgeTest {
     }
 
     @Test
-    void addNullTest() {
+    void add_Null_Test() {
         assertThrows(NullPointerException.class, () -> edge.add(null));
+    }
+
+    @Test
+    void isEmpty_EmptyEdge_Test() {
+        assertThat(edge.isEmpty(), is(true));
+    }
+
+    @Test
+    void isEmpty_NotEmptyEdge_Test() {
+        edge.add(1);
+        assertThat(edge.isEmpty(), is(false));
     }
 }
